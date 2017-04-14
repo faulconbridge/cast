@@ -17,8 +17,14 @@ import os
 import sys
 import optparse
 
+from cast.optionParser import OptionParser
+
 def main():
 
+    usage = "%prog [options] command"
+    parser = OptionParser(usage)
+
+    (options, args) = parser.parse_args()
     print("Hello, world!")
 
 

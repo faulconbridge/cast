@@ -14,7 +14,7 @@ setup(
   packages=find_packages('lib'),
   entry_points={
     'console_scripts': [
-      'cast=Cast.CLI.Cast:main',
+      'cast=cast.cast:main',
     ],
   },
   author='Christopher Wetherill',
