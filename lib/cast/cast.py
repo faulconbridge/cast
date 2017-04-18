@@ -7,8 +7,6 @@ Cast is a utility for executing commands in parallel against a remote cluster
 that arguably operates a little better than just "run SSH in a loop." But
 that probably also means it has a higher potential for destroying all your
 servers even faster. So, you know, mixed bag.
-
-With no command specified, Cast will run interactively.
 """
 
 import errno
@@ -19,7 +17,7 @@ import argparse
 
 from cast.commands.setConfig import SetConfig
 
-def setGeneralConfigArguments(self):
+def set_general_config_arguments(self):
     self.add_argument(
         "--workers",
         dest = "workers",
@@ -29,13 +27,17 @@ def setGeneralConfigArguments(self):
 
     return self
 
-
-def setHostConfigArguments(self):
+def set_host_config_arguments(self):
     self.add_argument(
         "--host",
         dest = "host",
-        # required = True,
         help = "Specify the canonical URL of the host to connect to"
+    )
+
+    self.add_argument(
+        "--group",
+        dest = "group",
+        help = "Specify a cluster group for easier management"
     )
 
     self.add_argument(
@@ -54,7 +56,6 @@ def setHostConfigArguments(self):
     )
 
     return self
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -78,14 +79,18 @@ def main():
     subparsers = parser.add_subparsers(help = "Sub-command help")
 
     set_config = subparsers.add_parser("set-config")
-    set_config = setGeneralConfigArguments(set_config)
-    set_config = setHostConfigArguments(set_config)
+    set_config = set_general_config_arguments(set_config)
+    set_config = set_host_config_arguments(set_config)
     set_config.set_defaults(func = SetConfig)
 
     args = parser.parse_args()
-    args.func(args)
-    print("Hello, world!")
 
+    try:
+        args.func(args)
+    except:
+        parser.parse_args(["-h"])
+
+    print("Hello, world!")
 
 if __name__ == "__main__":
     main()
