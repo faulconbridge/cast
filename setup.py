@@ -12,7 +12,10 @@ setup(
     version=VERSION,
     package_dir={'': 'lib'},
     packages=find_packages('lib'),
-    data_files=['~/.castrc'],
+    data_files=[
+        '~/.castrc',
+        '~/.cast/hosts.json'
+    ],
     entry_points={
         'console_scripts': [
           'cast=cast.cast:main',

@@ -1,6 +1,6 @@
 import argparse
 import configparser
-from cast.defaults import config_path, DEFAULTS
+from cast.defaults import config_path, DEFAULTS, HOSTS
 
 class SetConfig(argparse.Namespace):
     """Set Cast configuration values"""
@@ -13,10 +13,10 @@ class SetConfig(argparse.Namespace):
         self.validate_arguments(args)
 
         if args.workers:
-            self.set_workers(args.workers)
+            self.set_worker_entry(args.workers)
 
         if args.host:
-            self.set_host(args.host, args.shortname, args.group, args.key)
+            self.set_host_entry(args.host, args.shortname, args.group, args.key)
 
     def validate_arguments(self, args):
         if (args.shortname or args.group or args.key) and not args.host:
@@ -24,15 +24,21 @@ class SetConfig(argparse.Namespace):
         if args.host and not args.key:
             argparse.ArgumentParser().error("--key must be specified if a host is provided\n")
 
-    def set_workers(self, workers):
+    def set_worker_entry(self, workers):
         print("Changed default workers from {0} to {1}".format(
-            getattr(DEFAULTS, "workers"), str(workers))
+            DEFAULTS.get_default("workers"), str(workers))
         )
-        setattr(DEFAULTS, "workers", workers)
+        DEFAULTS.set_default("workers", workers)
 
-    def set_host(self, host, shortname, group, key):
-        config = configparser.ConfigParser()
-        config.read(config_path())
-        config["HOSTS"]["host"]
-        print(config.__class__)
-        print(config["DEFAULTS"].__class__)
+    def set_host_entry(self, host, shortname, group, key):
+        hostentry = {
+            "host": host,
+            "shortname": shortname,
+            "group": group,
+            "key": key
+        }
+
+        HOSTS.set_host(hostentry)
+
+        # print("Successfully added {} to the hostfile.".format(HOSTS.get_host()))
+
