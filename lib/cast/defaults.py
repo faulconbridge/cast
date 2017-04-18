@@ -4,10 +4,17 @@ import os
 import sys
 
 def config_path(path, filename):
+    """Make things less funky, primarily on Windows machines"""
     return os.path.abspath(os.path.expanduser(path) + "/" + filename)
 
 
 class Defaults(object):
+    """Global defaults that impact how Cast operates.
+
+    Currently, it's just the maximum number of workers
+    allowed to be spawned concurrently, but I expect this
+    number will increase as I make things less terrible.
+    """
     _DEFAULTS = {
         "workers": 4
     }
@@ -24,6 +31,9 @@ class Defaults(object):
             self._parse_config(config)
 
     def _parse_config(self, config):
+        """Convert the INI-style config file to a
+        less awful dict
+        """
         for key, val in self._DEFAULTS_CONVERTERS.items():
             try:
                 self._DEFAULTS[key] = val(config, 'DEFAULTS', key)
@@ -52,6 +62,13 @@ class Defaults(object):
             raise AttributeError(name)
 
 class Hosts(object):
+    """Any remote nodes that the user has specified
+    locally will be registered here as a list of dicts.
+
+    There's almost certainly A Better Way (tm), but I
+    don't know Python, so this is what we're going with
+    for now.
+    """
     _HOSTS = {}
 
     def __init__(self, path, filename):
@@ -73,6 +90,10 @@ class Hosts(object):
             raise AttributeError(host)
 
     def set_host(self, value):
+        """Updates an existing host record, if found, or
+        creates a new one and appends to both the global
+        environment and to the hosts config file.
+        """
         index = self.exists("host", value["host"])
 
         if index > -1:
@@ -86,6 +107,10 @@ class Hosts(object):
             json.dump(self._HOSTS, configfile)
 
     def exists(self, key, value):
+        """Iterates through the list of hosts to identify
+        the index of a host if it already exists. Returns
+        -1 if the record could not be found.
+        """
         for idx, host in enumerate(self._HOSTS):
             if host[key] == value:
                 index = idx
