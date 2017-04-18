@@ -1,13 +1,11 @@
 import configparser
+import json
 import os
 import sys
 
-def config_path():
-    return os.path.abspath(os.path.expanduser("~/.castrc"))
+def config_path(path):
+    return os.path.abspath(os.path.expanduser(path))
 
-def write_defaults(config):
-    with open(config_path(), "w") as configfile:
-        config.write(configfile)
 
 class Defaults(object):
     _DEFAULTS = {
@@ -41,7 +39,16 @@ class Defaults(object):
     def __setattr__(self, name, value):
         if name in self._DEFAULTS:
             self._DEFAULTS[name] = value
+
+            config = configparser.ConfigParser()
+            config["DEFAULT"] = {}
+
+            for key, val in self._DEFAULTS.items():
+                config["DEFAULT"]["{}".format(key)] = str(val)
+
+            with open(config_path("~/.castrc"), "w") as configfile:
+                config.write(configfile)
         else:
             raise AttributeError(name)
 
-DEFAULTS = Defaults(config_path())
+DEFAULTS = Defaults(config_path("~/.castrc"))

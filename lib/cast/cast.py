@@ -14,6 +14,7 @@ import logging
 import os
 import sys
 import argparse
+import getpass
 
 from cast.commands.setConfig import SetConfig
 
@@ -32,6 +33,20 @@ def set_host_config_arguments(self):
         "--host",
         dest = "host",
         help = "Specify the canonical URL of the host to connect to"
+    )
+
+    self.add_argument(
+        "--user",
+        dest = "user",
+        default = getpass.getuser(),
+        help = "Specify the user to connect as. Defaults to your current username."
+    )
+
+    self.add_argument(
+        "--port",
+        dest = "port",
+        default = 22,
+        help = "Specify the port, if non-standard. Defaults to port 22."
     )
 
     self.add_argument(

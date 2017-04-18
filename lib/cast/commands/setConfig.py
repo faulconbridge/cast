@@ -1,6 +1,6 @@
 import argparse
 import configparser
-from cast.defaults import config_path, write_defaults, DEFAULTS
+from cast.defaults import config_path, DEFAULTS
 
 class SetConfig(argparse.Namespace):
     """Set Cast configuration values"""
@@ -15,6 +15,9 @@ class SetConfig(argparse.Namespace):
         if args.workers:
             self.set_workers(args.workers)
 
+        if args.host:
+            self.set_host(args.host, args.shortname, args.group, args.key)
+
     def validate_arguments(self, args):
         if (args.shortname or args.group or args.key) and not args.host:
             argparse.ArgumentParser().error("--host must be specified\n")
@@ -22,12 +25,14 @@ class SetConfig(argparse.Namespace):
             argparse.ArgumentParser().error("--key must be specified if a host is provided\n")
 
     def set_workers(self, workers):
-        config = configparser.ConfigParser()
-        config.read(config_path())
-        config["DEFAULTS"]["workers"] = str(workers)
-        write_defaults(config)
-
         print("Changed default workers from {0} to {1}".format(
             getattr(DEFAULTS, "workers"), str(workers))
         )
         setattr(DEFAULTS, "workers", workers)
+
+    def set_host(self, host, shortname, group, key):
+        config = configparser.ConfigParser()
+        config.read(config_path())
+        config["HOSTS"]["host"]
+        print(config.__class__)
+        print(config["DEFAULTS"].__class__)
