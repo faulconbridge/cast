@@ -17,6 +17,7 @@ import argparse
 import getpass
 
 from cast.commands.setConfig import SetConfig
+from cast.commands.getConfig import GetConfig
 
 def set_general_config_arguments(self):
     self.add_argument(
@@ -72,6 +73,23 @@ def set_host_config_arguments(self):
 
     return self
 
+def get_host_config_arguments(self):
+    self.add_argument(
+        "--host",
+        dest = "host",
+        help = "Specify the canonical URL of the host you are looking up"
+    )
+
+    self.add_argument(
+        "--workers",
+        dest = "workers",
+        action = "store_true",
+        help = "Returns the maximum number of workers spawned"
+    )
+
+    return self
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -98,12 +116,16 @@ def main():
     set_config = set_host_config_arguments(set_config)
     set_config.set_defaults(func = SetConfig)
 
+    get_config = subparsers.add_parser("get-config")
+    get_config = get_host_config_arguments(get_config)
+    get_config.set_defaults(func = GetConfig)
+
     args = parser.parse_args()
 
-    try:
-        args.func(args)
-    except:
-        parser.parse_args(["-h"])
+    # try:
+    args.func(args)
+    # except:
+    #     parser.parse_args(["-h"])
 
     print("Hello, world!")
 

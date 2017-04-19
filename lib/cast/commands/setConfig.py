@@ -40,4 +40,4 @@ class SetConfig(argparse.Namespace):
 
         HOSTS.set_host(hostentry)
 
-        # print("Successfully added {} to the hostfile.".format(HOSTS.get_host()))
+        print("Successfully added {} to the hostfile.".format(HOSTS.get_host("host", host)))

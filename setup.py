@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 from setuptools import setup, find_packages
@@ -10,8 +10,8 @@ REQUIRES = ['PyYAML']
 setup(
     name='Cast',
     version=VERSION,
+    packages=['cast'],
     package_dir={'': 'lib'},
-    packages=find_packages('lib'),
     data_files=[
         '~/.castrc',
         '~/.cast/hosts.json'

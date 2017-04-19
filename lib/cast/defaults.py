@@ -83,7 +83,7 @@ class Hosts(object):
                 self._HOSTS = json.loads('[]')
 
     def get_host(self, key, value):
-        index = exists(self._HOSTS, key, value)
+        index = self.exists(key, value)
         if index > -1:
             return self._HOSTS[index]
         else:
@@ -98,10 +98,8 @@ class Hosts(object):
 
         if index > -1:
             self._HOSTS[index] = value
-            print("updated")
         else:
             self._HOSTS.append(value)
-            print("appended")
 
         with open(config_path("~/.cast", "hosts.json"), "w") as configfile:
             json.dump(self._HOSTS, configfile)
