@@ -40,20 +40,15 @@ def set_host_config_arguments(self):
         "--user",
         dest = "user",
         default = getpass.getuser(),
-        help = "Specify the user to connect as. Defaults to your current username."
+        help = "Specify the user to connect as. Defaults to your current username"
     )
 
     self.add_argument(
         "--port",
         dest = "port",
+        type = int,
         default = 22,
-        help = "Specify the port, if non-standard. Defaults to port 22."
-    )
-
-    self.add_argument(
-        "--group",
-        dest = "group",
-        help = "Specify a cluster group for easier management"
+        help = "Specify the port, if non-standard. Defaults to port 22"
     )
 
     self.add_argument(
@@ -63,11 +58,18 @@ def set_host_config_arguments(self):
     )
 
     self.add_argument(
+        "--group",
+        dest = "group",
+        help = "Specify a cluster group for easier management"
+    )
+
+    self.add_argument(
         "--key",
         dest = "key",
+        default = "~/.ssh/id_rsa",
         help = """
             Specify the location on disk of the SSH private key
-            used to connect to the host
+            used to connect to the host. Defaults to ~/.ssh/id_rsa
         """
     )
 
@@ -122,10 +124,10 @@ def main():
 
     args = parser.parse_args()
 
-    # try:
-    args.func(args)
-    # except:
-    #     parser.parse_args(["-h"])
+    try:
+        args.func(args)
+    except AttributeError:
+        parser.parse_args(["-h"])
 
     print("Hello, world!")
 

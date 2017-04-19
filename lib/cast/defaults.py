@@ -93,6 +93,17 @@ class Hosts(object):
         """Updates an existing host record, if found, or
         creates a new one and appends to both the global
         environment and to the hosts config file.
+
+        Right now this will overwrite completely any existing
+        record if a match is found, so you can't, for example,
+        do something like
+
+        cast set-config --host test --key ~/.ssh/new_key_rsa
+
+        without wiping out user/port/shortname/group.
+
+        This should probably be fixed at some point, but for
+        now I can get away with calling it a "feature".
         """
         index = self.exists("host", value["host"])
 
@@ -103,6 +114,8 @@ class Hosts(object):
 
         with open(config_path("~/.cast", "hosts.json"), "w") as configfile:
             json.dump(self._HOSTS, configfile)
+
+        return index
 
     def exists(self, key, value):
         """Iterates through the list of hosts to identify

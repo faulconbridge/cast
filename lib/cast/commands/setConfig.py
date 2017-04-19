@@ -16,13 +16,16 @@ class SetConfig(argparse.Namespace):
             self.set_worker_entry(args.workers)
 
         if args.host:
-            self.set_host_entry(args.host, args.shortname, args.group, args.key)
+            self.set_host_entry(args.host, args.user, args.port,
+                                args.shortname, args.group, args.key)
 
     def validate_arguments(self, args):
-        if (args.shortname or args.group or args.key) and not args.host:
-            argparse.ArgumentParser().error("--host must be specified\n")
+        if not args.workers and not args.host:
+            argparse.ArgumentParser().error(
+                "One of --workers or --host must be specified\n")
         if args.host and not args.key:
-            argparse.ArgumentParser().error("--key must be specified if a host is provided\n")
+            argparse.ArgumentParser().error(
+                "--key must be specified if a host is provided\n")
 
     def set_worker_entry(self, workers):
         print("Changed default workers from {0} to {1}".format(
@@ -30,14 +33,23 @@ class SetConfig(argparse.Namespace):
         )
         DEFAULTS.set_default("workers", workers)
 
-    def set_host_entry(self, host, shortname, group, key):
+    def set_host_entry(self, host, user, port, shortname, group, key):
         hostentry = {
             "host": host,
+            "user": user,
+            "port": port,
             "shortname": shortname,
             "group": group,
             "key": key
         }
 
-        HOSTS.set_host(hostentry)
+        index = HOSTS.set_host(hostentry)
 
-        print("Successfully added {} to the hostfile.".format(HOSTS.get_host("host", host)))
+        if index > -1:
+            action = ("updated", "in")
+        else:
+            action = ("added", "to")
+
+        print("Successfully {0} Host \"{1}\" {2} the hostfile.".format(
+            action[0], HOSTS.get_host("host", host)["host"], action[1])
+        )
