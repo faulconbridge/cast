@@ -18,8 +18,11 @@ class GetConfig(argparse.Namespace):
         if args.host:
             self.get_host_entry(args.host)
 
+        if args.all_hosts:
+            self.get_all_hosts()
+
     def validate_arguments(self, args):
-        if not (args.host or args.workers):
+        if not (args.host or args.workers or args.all_hosts):
             argparse.ArgumentParser().error("One of --workers or --host must be specified\n")
 
     def get_worker_entry(self, workers):
@@ -34,10 +37,25 @@ class GetConfig(argparse.Namespace):
      Port: {2}
     Group: {3}
 Shortname: {4}
-  Keyfile: {5}""".format(hostinfo["host"],
-                         hostinfo["user"],
-                         hostinfo["port"],
-                         hostinfo["group"],
-                         hostinfo["shortname"],
-                         hostinfo["key"])
-        )
+  Keyfile: {5}""".format(
+            hostinfo["host"],
+            hostinfo["user"],
+            hostinfo["port"],
+            hostinfo["group"],
+            hostinfo["shortname"],
+            hostinfo["key"]))
+
+    def get_all_hosts(self):
+        for host in HOSTS._HOSTS:
+            print("""     Host: {0}
+     User: {1}
+     Port: {2}
+    Group: {3}
+Shortname: {4}
+  Keyfile: {5}\n""".format(
+            host["host"],
+            host["user"],
+            host["port"],
+            host["group"],
+            host["shortname"],
+            host["key"]))

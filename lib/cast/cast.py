@@ -117,6 +117,12 @@ def main():
 
     get_config = subparsers.add_parser("get-config")
     get_config = get_or_del_config_arguments(get_config)
+    get_config.add_argument(
+        "--list-all-hosts",
+        dest = "all_hosts",
+        action = "store_true",
+        help = "List all hosts currently registered with Cast"
+    )
     get_config.set_defaults(func = GetConfig)
 
     delete_config = subparsers.add_parser("delete-config")

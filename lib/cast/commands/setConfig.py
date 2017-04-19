@@ -23,9 +23,6 @@ class SetConfig(argparse.Namespace):
         if not args.workers and not args.host:
             argparse.ArgumentParser().error(
                 "One of --workers or --host must be specified\n")
-        if args.host and not args.key:
-            argparse.ArgumentParser().error(
-                "--key must be specified if a host is provided\n")
 
     def set_worker_entry(self, workers):
         print("Changed default workers from {0} to {1}".format(
