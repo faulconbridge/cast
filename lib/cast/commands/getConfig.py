@@ -28,9 +28,8 @@ class GetConfig(argparse.Namespace):
         )
 
     def get_host_entry(self, host):
-        try:
-            hostinfo = HOSTS.get_host("host", host)
-            print("""     Host: {0}
+        hostinfo = HOSTS.get_host("host", host)
+        print("""     Host: {0}
      User: {1}
      Port: {2}
     Group: {3}
@@ -41,8 +40,4 @@ Shortname: {4}
                          hostinfo["group"],
                          hostinfo["shortname"],
                          hostinfo["key"])
-            )
-        except:
-            print("Hmm...We couldn't find the record (Host: {0}) you were looking for.\n".format(host))
-            print("Check that you spelled everything correctly and try again?")
-
+        )

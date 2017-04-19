@@ -18,8 +18,9 @@ import getpass
 
 from cast.commands.setConfig import SetConfig
 from cast.commands.getConfig import GetConfig
+from cast.commands.deleteConfig import DeleteConfig
 
-def set_general_config_arguments(self):
+def set_config_arguments(self):
     self.add_argument(
         "--workers",
         dest = "workers",
@@ -27,9 +28,6 @@ def set_general_config_arguments(self):
         help = "The maximum number of ssh workers to spawn"
     )
 
-    return self
-
-def set_host_config_arguments(self):
     self.add_argument(
         "--host",
         dest = "host",
@@ -75,7 +73,7 @@ def set_host_config_arguments(self):
 
     return self
 
-def get_host_config_arguments(self):
+def get_or_del_config_arguments(self):
     self.add_argument(
         "--host",
         dest = "host",
@@ -114,13 +112,16 @@ def main():
     subparsers = parser.add_subparsers(help = "Sub-command help")
 
     set_config = subparsers.add_parser("set-config")
-    set_config = set_general_config_arguments(set_config)
-    set_config = set_host_config_arguments(set_config)
+    set_config = set_config_arguments(set_config)
     set_config.set_defaults(func = SetConfig)
 
     get_config = subparsers.add_parser("get-config")
-    get_config = get_host_config_arguments(get_config)
+    get_config = get_or_del_config_arguments(get_config)
     get_config.set_defaults(func = GetConfig)
+
+    delete_config = subparsers.add_parser("delete-config")
+    delete_config = get_or_del_config_arguments(delete_config)
+    delete_config.set_defaults(func = DeleteConfig)
 
     args = parser.parse_args()
 

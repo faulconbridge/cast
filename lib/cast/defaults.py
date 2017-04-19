@@ -7,6 +7,12 @@ def config_path(path, filename):
     """Make things less funky, primarily on Windows machines"""
     return os.path.abspath(os.path.expanduser(path) + "/" + filename)
 
+class HostException(Exception):
+    def __init__(self, key, value):
+        print("Hmm...We couldn't find the record ({0}: {1}) you were looking for.\n".format(key, value))
+        print("Check that you spelled everything correctly and try again?")
+
+        sys.exit(0)
 
 class Defaults(object):
     """Global defaults that impact how Cast operates.
@@ -61,6 +67,12 @@ class Defaults(object):
         else:
             raise AttributeError(name)
 
+    def delete_default(self, name):
+        if name in self._DEFAULTS:
+            print("This hasn't been implemented yet because I screwed up variable scoping!")
+        else:
+            raise AttributeError(name)
+
 class Hosts(object):
     """Any remote nodes that the user has specified
     locally will be registered here as a list of dicts.
@@ -87,7 +99,7 @@ class Hosts(object):
         if index > -1:
             return self._HOSTS[index]
         else:
-            raise AttributeError(host)
+            raise HostException(key, value)
 
     def set_host(self, value):
         """Updates an existing host record, if found, or
@@ -116,6 +128,18 @@ class Hosts(object):
             json.dump(self._HOSTS, configfile)
 
         return index
+
+    def delete_host(self, host):
+        index = HOSTS.exists("host", host)
+        if index == -1:
+            raise HostException("host", host)
+
+        dropped = self._HOSTS.pop(index)
+
+        with open(config_path("~/.cast", "hosts.json"), "w") as configfile:
+            json.dump(self._HOSTS, configfile)
+
+        return dropped
 
     def exists(self, key, value):
         """Iterates through the list of hosts to identify
