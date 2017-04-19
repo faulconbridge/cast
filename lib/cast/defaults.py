@@ -30,6 +30,7 @@ class Defaults(object):
     }
 
     def __init__(self, filename):
+        self._defaults = self._DEFAULTS.copy()
         config = configparser.ConfigParser()
         parsed = config.read(filename)
 
@@ -42,25 +43,25 @@ class Defaults(object):
         """
         for key, val in self._DEFAULTS_CONVERTERS.items():
             try:
-                self._DEFAULTS[key] = val(config, 'DEFAULTS', key)
+                self._defaults[key] = val(config, 'DEFAULTS', key)
             except:
                 pass
 
     def get_default(self, name):
-        if name in self._DEFAULTS:
-            return self._DEFAULTS[name]
+        if name in self._defaults:
+            return self._defaults[name]
         else:
             raise AttributeError(name)
 
     def set_default(self, name, value):
-        if name in self._DEFAULTS:
-            self._DEFAULTS[name] = value
+        if name in self._defaults:
+            self._defaults[name] = value
 
             config = configparser.ConfigParser()
-            config["DEFAULT"] = {}
+            config["DEFAULTS"] = {}
 
-            for key, val in self._DEFAULTS.items():
-                config["DEFAULT"]["{}".format(key)] = str(val)
+            for key, val in self._defaults.items():
+                config["DEFAULTS"]["{}".format(key)] = str(val)
 
             with open(config_path("~/", ".castrc"), "w") as configfile:
                 config.write(configfile)
@@ -68,8 +69,8 @@ class Defaults(object):
             raise AttributeError(name)
 
     def delete_default(self, name):
-        if name in self._DEFAULTS:
-            print("This hasn't been implemented yet because I screwed up variable scoping!")
+        if name in self._defaults:
+            self.set_default(name, self._DEFAULTS[name])
         else:
             raise AttributeError(name)
 
