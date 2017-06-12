@@ -23,7 +23,8 @@ class GetConfig(argparse.Namespace):
 
     def validate_arguments(self, args):
         if not (args.host or args.workers or args.all_hosts):
-            argparse.ArgumentParser().error("One of --workers or --host must be specified\n")
+            argparse.ArgumentParser().error(
+                "One of --workers or --host must be specified\n")
 
     def get_worker_entry(self, workers):
         print("We will spawn up to {0} workers".format(
