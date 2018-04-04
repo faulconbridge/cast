@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Execute commands against a remote cluster
@@ -38,7 +38,9 @@ def set_config_arguments(self):
         "--user",
         dest = "user",
         default = getpass.getuser(),
-        help = "Specify the user to connect as. Defaults to your current username"
+        help = """
+            Specify the user to connect as.
+            Defaults to your current username"""
     )
 
     self.add_argument(
@@ -67,8 +69,7 @@ def set_config_arguments(self):
         default = "~/.ssh/id_rsa",
         help = """
             Specify the location on disk of the SSH private key
-            used to connect to the host. Defaults to ~/.ssh/id_rsa
-        """
+            used to connect to the host. Defaults to ~/.ssh/id_rsa"""
     )
 
     return self

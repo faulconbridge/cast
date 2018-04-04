@@ -5,8 +5,7 @@ from cast.defaults import config_path, DEFAULTS, HOSTS
 class SetConfig(argparse.Namespace):
     """Set Cast configuration values"""
     name = "set-config"
-    usage = """
-    %prog <command>"""
+    usage = "%prog <command>"
     summary = "Set Cast configuration variables"
 
     def __init__(self, args):
@@ -16,8 +15,9 @@ class SetConfig(argparse.Namespace):
             self.set_worker_entry(args.workers)
 
         if args.host:
-            self.set_host_entry(args.host, args.user, args.port,
-                                args.shortname, args.group, args.key)
+            self.set_host_entry(
+                args.host, args.user, args.port,
+                args.shortname, args.group, args.key)
 
     def validate_arguments(self, args):
         if not args.workers and not args.host:
