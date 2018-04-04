@@ -9,8 +9,10 @@ def config_path(path, filename):
 
 class HostException(Exception):
     def __init__(self, key, value):
-        print("Hmm...We couldn't find the record ({0}: {1}) you were looking for.\n".format(key, value))
-        print("Check that you spelled everything correctly and try again?")
+        print(
+            "Hmm...We couldn't find the record ({0}: {1})",
+            "you were looking for.\nCheck that you spelled",
+            "everything correctly and try again?".format(key, value))
 
         sys.exit(0)
 
